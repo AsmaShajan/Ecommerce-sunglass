@@ -26,10 +26,9 @@ const ProductSchema = new mongoose.Schema({
         required:true,
         trim: true
     },
-    image:{
+    image: {
         type:[String],
         required:true
-        
     },
      price:{
         type:Number,

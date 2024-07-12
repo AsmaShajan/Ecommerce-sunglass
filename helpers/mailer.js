@@ -64,21 +64,25 @@ export const verifyMail = async(req,res)=>{
 export const verify_Otp = async(req,res)=>{
     try{
         const { otp } = req.body;
-       
+        console.log(otp);
         req.session.old_otp = req.body.otp;
        
          const otp_Data = await otps.findOne({otp})
          
          console.log(otp_Data)
          if(!otp_Data){
-             res.render('customer/auth/send-otp',{message: 'Invalid otp'})
+             res.render('/customer/auth/send-otp',{message: 'Invalid otp'})
+             //res.redirect('/customer/auth/send-otp?message=Invalid%20otp');
+
          }
          else
          if (new Date() > otp_Data.expiresAt) {
  
              // OTP has expired
              const otp_Expired = true;
-             res.render('customer/auth/send-otp',{message: 'OTP expired'})
+             res.render('/customer/auth/send-otp',{message: 'OTP expired'})
+            //res.redirect('/customer/auth/send-otp?message=OTP%20expired');
+
          }
         
          //clear the database after OTP verification
@@ -86,13 +90,13 @@ export const verify_Otp = async(req,res)=>{
          await otps.deleteOne({email:req.session.userEmail,otp})
 
         req.session.is_userVerified = true; 
-        
-       await  user_registration(req,res);
+        await  user_registration(req,res);
 
     }
     catch (error) {
-        res.render('customer/auth/send-otp',{message: 'An error occured while verifying the otp'})
-        
+        res.render('/customer/auth/send-otp',{message: 'An error occured while verifying the otp'})
+        //res.redirect('/customer/auth/send-otp?message=An%20error%20occured%20while%20verifying%20the%20otp');
+
     }
 }
 

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store</title>
+
+    <link rel="stylesheet" type="text/css" href="/customer/style2.css">
+    <link rel="stylesheet" type="text/css" href="/customer/userprofile.css">
+     <!-------link icons-->
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+  <header>
+    <div class="header-top">
+      Free shipping available on all orders!
+    </div> 
+    <nav>
+      <a href="" class="logo"> <i class="fa-solid fa-store"></i>ZAINAY</a>
+      <div class="main-header">
+        <ul class="navbar">
+          <li><a href="/">Home</a></li>
+          <li><a href="/sunglasses">Sunglasses</a></li>
+          <li><a href="/eyeglasses">Eyeglasses</a></li>
+        </ul>
+          <div class="header-icons">
+            <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
+            <a href="#"><i class="fa-solid fa-cart-shopping"></i></a>
+            <a href="#"><i class="fa-regular fa-heart"></i></a>
+            <div class="dropdown " >
+                <button onclick="toggleDropdown()" class="dropbtn"><i class="fa-regular fa-user"></i></button>
+                <div id="dropdownContent" class="dropdown-content">
+                  <% if (!userRegistered) { %>
+                    <a href="/register">LOGIN/REGISTER</a>
+                    <% } %>
+                   
+                    <a href="#">MY ORDERS</a>
+                    <a href="#">MY WISHLIST</a>
+                    <hr>
+                    <a href="/logout" id="logout-link">LOGOUT</a>
+                </div>
+            </div>
+        </div>
+        
+        
+          </div>
+      </div>
+    </nav>
+    
+  </header>
+  
+<!---------- profile section-------->
+<form action='/user-profile-address/<%= user_Info._id%>'  method="post">
+    <section class="user_Profile">
+        <div class="row">
+            <div class="left">
+                <li><a href="/user-profile">My Account</a></li>
+                <li><a href="">My Orders</a></li>
+                <li><a href="">My WishList</a></li>
+                <li><a href="">My Address</a></li>
+                <li><a href="">Store Credits & Refunds</a></li>
+                </div>
+                
+                
+                        <div class="middle">    
+                    
+                            <h1 class="underline">Contact Information</h1>
+                                 <span class="input-fields"><%= user_Info.name %></span>
+                                 <span class="input-fields"><%= user_Info.phone %></span>
+                                
+                               
+                           
+                           
+                         </div>
+    
+                         <div class="right">
+                            <h1 class="underline">Address</h1>
+                            <input class="input-fields" type="text" placeholder="Street-Address*"  name="street" id="input_Street" value="<%= user_Info.street %>" required>
+                            <input class="input-fields" type="text" placeholder=""  name="street-name" id="input_Street_Name" value="<%= user_Info.street-name %>" required>
+                            <input class="input-fields" type="text" placeholder=""  name="street-name" id="input_Street_Name" value="<%= user_Info.street-name %>">
+             
+                            <input class="input-fields" type="text" value="India"  name="country" id="input_Country_Name" required readonly>
+                            
+                            <select class="input-fields" name="state" >
+                             <option selected>Please select a region,state or province *</option>
+                             <% states.forEach(state => { %>
+                                 <option value="<%= state.isoCode %>"><%= state.name %></option>
+                             <% }); %>
+                            </select>
+             
+                            <input class="input-fields" type="text" placeholder="city*"  name="city" id="input_City_Name" value="<%= user_Info.city %>" required>
+                            
+                            <input class="input-fields" type="text" placeholder="Zip/Postal Code"  name="postalcode" id="input_postal_code" value="<%= user_Info.postalcode %>" required>
+                            
+                            <button type="submit" class="btn-by">SAVE ADDRESS</button>
+                         </div>
+                       
+                   
+              
+                
+               
+               
+                
+              
+               
+               
+        </div>
+       
+      </section>
+    </form>
+      
+
+ 
+
+  
+ 
+
+<!-- contact section -->
+<section class="contact">
+  <h2>Contact us</h2>
+  <p>
+    Functional handbags made of luxurious materials to improve people's
+    lives in small but mighty ways. Lorem ipsum dolor sit amet consectetur,
+    adipisicing elit. Est dolorem cum corporis impedit quae praesentium
+    nulla atque ut, reprehenderit qui mollitia, facilis voluptates
+    cupiditate nam fuga, quis fugit voluptatum labore.
+  </p>
+
+  <div id="contact-container">
+    <input
+      type="email"
+      id="email-input"
+      placeholder="Enter your email address.."
+    />
+    <button id="email">Submit</button>
+  </div>
+</section>
+
+ <!-- footer section -->
+ <hr />
+ <footer> 
+   <div>
+     <h5>Quick links</h5>
+     <a href="#"><p>Bags</p></a>
+     <a href="#"><p>Shoes</p></a>
+     <a href="#"><p>Lookbook</p></a>
+   </div>
+   <div>
+     <h5>Info</h5>
+     <a href="#"><p>About</p></a>
+     <a href="#"><p>Contact us</p></a>
+     <a href="#"><p>Shipping policy</p></a>
+     <a href="#"><p>Blog</p></a>
+   </div>
+   <div>
+     <h5>Our mission</h5>
+     <p>
+       Quality materials, good designs, craftsmanship and sustainability.
+     </p>
+     <div>
+       <i class="bx bxl-facebook-square"></i>
+       <i class="bx bxl-instagram"></i>
+       <i class="bx bxl-youtube"></i>
+       <i class="bx bxl-tiktok"></i>
+       <i class="bx bxl-twitter"></i>
+     </div>
+   </div>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+   <!-----function that dispalys the profile dropdown menu-->
+ <script>
+  function toggleDropdown() {
+   var dropdownContent = document.getElementById("dropdownContent");
+   dropdownContent.classList.toggle("show");
+}
+
+// Close the dropdown menu if the user clicks outside of it
+window.onclick = function(event) {
+   if (!event.target.matches('.dropbtn')) {
+       var dropdowns = document.getElementsByClassName("dropdown-content");
+       for (var i = 0; i < dropdowns.length; i++) {
+           var openDropdown = dropdowns[i];
+           if (openDropdown.classList.contains('show')) {
+               openDropdown.classList.remove('show');
+           }
+       }
+   }
+}
+
+
+
+ </script>
+
+  
+  
+ </footer>
+
+   
+  
+   
+   
+</body>
+</html>

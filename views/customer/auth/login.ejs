@@ -21,10 +21,10 @@
       <a href="" class="logo"> <i class="fa-solid fa-store"></i>ZAINAY</a>
       <div class="main-header">
           <ul class="navbar">
-            <li a href="">Home</li>
-            <li a href="">About</li>
-            <li a href="">Sunglasses</li>
-            <li a href="">Eyeglasses</li>
+            <li><a href="/">Home</li>
+           
+            <li><a href="/sunglasses">Sunglasses</li>
+            <li><a href="/eyeglasses">Eyeglasses</li>
           </ul>
           <div class="header-icons">
             <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
@@ -57,7 +57,12 @@
             <div class="wrapper">
                 <form action="/login" method="post" id="login-form">
                     <h1>LOGIN</h1>
-                    
+                    <% if (successmessage) { %>
+                      <div  id="success-message" class="alert alert-success" role="alert">
+                        <%= successmessage %>
+                      </div>
+                      <% } %>
+                      
                     <div class="input-box">
                         <input type="text" placeholder="Email"  name="email" id="input_Email1" required><i class="fa-solid fa-envelope"></i>
                         <p class="text-danger" id="username-error-display"></p>
@@ -248,7 +253,15 @@ console.error('Error:', error);
 
 </script>
 
-  
+<script>
+  // Function to close the success message after 3 seconds
+  setTimeout(function() {
+      var successMessage = document.getElementById('success-message');
+      if (successMessage) {
+          successMessage.style.display = 'none';
+      }
+  }, 3000); // 3000 milliseconds = 3 seconds
+</script>
  </footer>
 
    

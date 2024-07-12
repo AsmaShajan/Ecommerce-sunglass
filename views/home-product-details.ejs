@@ -11,7 +11,20 @@
     <!-------link icons-->
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
+    <style>
+        .small-img-group{
+            display: flex;
+            justify-content: space-between;
+        }
+        .small-img-col{
+            flex-basis: 24%;
+        }
+    </style>
+
 </head>
+
 <body>
   <header>
     <div class="header-top">
@@ -20,15 +33,30 @@
     <nav>
       <a href="" class="logo"> <i class="fa-solid fa-store"></i>ZAINAY</a>
       <div class="main-header">
-          <ul class="navbar">
-            <li a href="">Home</li>
-            <li a href="">About</li>
-            <li a href="">Sunglasses</li>
-            <li a href="">Eyeglasses</li>
-          </ul>
+        <ul class="navbar">
+          <li><a href="/">Home</a></li>
+          <li><a href="/sunglasses">Sunglasses</a></li>
+          <li><a href="/eyeglasses">Eyeglasses</a></li>
+        </ul>
           <div class="header-icons">
             <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
-            <a href="#"><i class="fa-solid fa-cart-shopping"></i></a>
+            <div class="cart-container">
+                <a href="#"><i class="fa-solid fa-cart-shopping"></i></a>
+                <span id="cart-counter" class="cart-counter"><%= parseInt(cart.totalitems,10) || 0 %></span>
+                
+                <div class="dropdown-content">
+                    <% if (cart.items.length > 0) { %>
+                        <ul>
+                            <% cart.items.forEach(item => { %>
+                                <li><%= item.name %>: <%= item.quantity %></li>
+                            <% }) %>
+                        </ul>
+                    <% } else { %>
+                        Your cart is empty!
+                    <% } %>
+                </div>
+            </div>
+            
             <a href="#"><i class="fa-regular fa-heart"></i></a>
             <div class="dropdown " >
                 <button onclick="toggleDropdown()" class="dropbtn"><i class="fa-regular fa-user"></i></button>
@@ -50,59 +78,45 @@
       </div>
     </nav>
     </header>
-<!------------------Product-details------->
-     
-<div id="products">
-  <div class="zoom">
-    <div class="main-wrapper">
-      <div class="container">
-        <div class="product-div">
-          <div class="product-div-left">
-            <div class="original">
-              <div class="image-zoom-container">
-                <div class="img-container">
-                  <img src="../customer/images/<%= productList.image[0] %>" id="myimage">
+         <!-----product details----->
+    <div class="small-container single-product">
+        <div class="row">
+         <div class="product-details">
+            <div class="col-2">
+                <div class="card  zoom-container" id="image-zoom" >
+                    
+                    <img class="img-fluid w-100 pb-1 zoomed-image" src="" id="mainimage">
                 </div>
-              </div>
+                <div class="small-img-gp" id="thumbnails-container">
+                    <% productList.image.forEach((image, index) => { %>
+                        <div class="small-img-col card">
+                            <img id="thumbnail<%= index %>" src="../customer/images/<%= image %>" width="100%" class="img-fluid small-img" alt="Thumbnail <%= index + 1 %>">
+                        </div>
+                    <% }); %>
+                </div>
             </div>
-            <div class="hover-container">
-              <div>
-                <% productList.image.forEach((image, index) => { %>
-                  <img src="../customer/images/<%= image %>" class="thumbnail" alt="Thumbnail <%= index + 1 %>">
-                <% }); %>
-              </div>
-            </div>
-          </div>
-          <div class="product-div-right">
-            <span class="product-name"><%= productList.productname %></span>
-            <span class="product-price"><%= productList.price %></span>
-            <div class="product-rating">
-              <span><i class="fas fa-star"></i></span>
-              <span><i class="fas fa-star"></i></span>
-              <span><i class="fas fa-star"></i></span>
-              <span><i class="fas fa-star"></i></span>
-              <span><i class="fas fa-star-half-alt"></i></span>
-              
-            </div>
-            <div class="rating-count">(350 ratings)</div>
-
-            <p class="product-description"><%= productList.description %></p>
-            <span class="product-quantity">Quantity</span>
-            <div class="btn-groups">
-              <button type="button" class="add-cart-btn">Add to Cart</button>
-              <button type="button" class="buy-now-btn">Buy Now</button>
-            </div>
-          </div>
+       
+    
+        <div class="col-2 second">
+            <form id="add-to-cart-form" method="POST" action="/addtocart/<%= productList._id %>"></form>
+            <h6>Home/Sunglasses</h6>
+           
+            <h4 style="text-transform: uppercase;"><%= productList.productname %></h4>
+            <h3 class="product-price">$<%= productList.price %></h3>
+            <h3>Quantity <input class="product-quantity" name="quantity"type="number" value="1" min="1"></h3>
+            <h3 class="product-description">Product details</h3>
+            <span><%= productList.description %></span>
+              <div class="btn-group my-5">
+                <button class="btn-by add-to-cart" data-product-id="<%= productList._id %>">Add To Cart</button>
+                <button class="btn-by">Buy Now</button>
+             </div>
+            </form> 
+          
+          
         </div>
-        <div class="viewer">
-          <img src="../customer/images/<%= productList.image[0] %>">
-        </div>
-        <div class="magnifier"></div>
-      </div>
     </div>
-  </div>
-</div>
-
+      </div>
+     </div>    
 
     <!-- contact section -->
 <section class="contact">
@@ -130,9 +144,10 @@
    <footer> 
      <div>
        <h5>Quick links</h5>
-       <a href="#"><p>Bags</p></a>
-       <a href="#"><p>Shoes</p></a>
-       <a href="#"><p>Lookbook</p></a>
+       <a href="#"><p>Home</p></a>
+       <a href="#"><p>Sunglasses</p></a>
+       <a href="#"><p>Eyeglasses</p></a>
+       
      </div>
      <div>
        <h5>Info</h5>
@@ -156,9 +171,122 @@
      </div>
      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     
-     
-     
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+     <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.querySelector('.add-to-cart').addEventListener('click', function () {
+                const form = document.getElementById('add-to-cart-form');
+                form.submit();
+            });
+        });
+    </script>
     
+     <script>
+        $(document).ready(function() {
+            var mainImg = document.getElementById('mainimage');
+            var smallImg = document.getElementsByClassName('small-img');
+            var imageZoom = document.getElementById('image-zoom');
+            var cropper;
+
+            function initializeCropper() {
+                if (cropper) {
+                    cropper.destroy();
+                }
+                cropper = new Cropper(mainImg, {
+                    aspectRatio: 1,
+                    viewMode: 1,
+                    dragMode: 'none',
+                    preview: '.img-preview',
+                    ready: function() {
+                        $('.img-preview').hide(); // Initially hide the preview
+                    },
+                    cropstart: function() {
+                        $('.img-preview').show(); // Show the preview when cropping starts
+                    },
+                    cropend: function() {
+                        $('.img-preview').hide(); // Hide the preview when cropping ends
+                    },
+                    crop: function(event) {
+                        // Optionally, you can update the preview container here if needed
+                    }
+                });
+            }
+
+            // Automatically set the main image to the first thumbnail's source and initialize Cropper
+            if (smallImg.length > 0) {
+                mainImg.src = smallImg[0].src;
+                
+                imageZoom.style.setProperty('--url', `url(${smallImg[0].src})`);
+            } 
+
+            // Set onclick events for each thumbnail using a loop
+            for (var i = 0; i < smallImg.length; i++) {
+                (function(index) {
+                    smallImg[index].onclick = function() {
+                        mainImg.src = smallImg[index].src;
+                       
+                        imageZoom.style.setProperty('--url', `url(${smallImg[index].src})`);
+                       // console.log("Main Image Source: " + mainImg.src);
+                       // console.log("Thumbnail Source: " + smallImg[index].src);
+                    };
+                })(i);
+            }
+
+            // Zoom effect
+            $('.zoom-container').on('mousemove', function(event) {
+                var containerOffset = $(this).offset();
+                var xPos = event.pageX - containerOffset.left;
+                var yPos = event.pageY - containerOffset.top;
+
+                $(this).find('.zoomed-image').css({
+                    'transform-origin': `${xPos}px ${yPos}px`,
+                    'transform': 'scale(2)' // Change scale value for desired zoom level
+                });
+            });
+
+            $('.zoom-container').on('mouseleave', function() {
+                $(this).find('.zoomed-image').css('transform', 'scale(1)');
+            });
+        });
+    </script>
+      
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+    const cartCounter = document.getElementById('cart-counter');
+    const addToCartButtons = document.querySelectorAll('.add-to-cart');
+
+    addToCartButtons.forEach(button => {
+        button.addEventListener('click', async function () {
+            const productId = this.getAttribute('data-product-id');
+            try {
+                const response = await fetch(`/addtocart/${productId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    // Update the cart counter
+                    cartCounter.textContent = data.totalItems;
+                } else {
+                    console.error('Failed to add product to cart');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+    });
+});
+
+    </script>
+    
+
+
+
+   
    
      <!-----function that dispalys the profile dropdown menu-->
    <script>
@@ -183,120 +311,39 @@
   
   
    </script>
+
    
    
-    <script>
+   <!-----cart --------->
+   <script>
+    const cartIcon = document.querySelector('.cart-container a');
+    const dropdownContent = document.querySelector('.dropdown-content');
+    const cartCounter = document.getElementById('cart-counter');
 
-const allHoverImages = document.querySelectorAll('.hover-container div img');
-const imgContainer = document.querySelector('.img-container');
-
-window.addEventListener('DOMContentLoaded', () => { 
-    allHoverImages[0].parentElement.classList.add('active');
-    
-});
-
-allHoverImages.forEach((image) => {
-    image.addEventListener('mouseover', () =>{
-        imgContainer.querySelector('img').src = image.src;
-        resetActiveImg();
-        image.parentElement.classList.add('active');
+    cartIcon.addEventListener('click', (e) => {
+        e.preventDefault(); // Prevent the default anchor behavior
+        if (cartCounter.textContent === '0') {
+            dropdownContent.style.display = 'block';
+        }
     });
 
-    // Add zooming functionality on mousemove
-    image.addEventListener('mousemove', (event) => {
-            const boundingRect = image.getBoundingClientRect();
-            const mouseX = event.clientX - boundingRect.left;
-            const mouseY = event.clientY - boundingRect.top;
-
-            // Calculate zoom scale based on mouse position
-            const scaleFactor = 2; // Adjust as needed
-            const zoomedImage = imgContainer.querySelector('img');
-            const zoomFactor = 1 + (scaleFactor - 1) *  (mouseX / image.width); // Change 1 for natural size
-            
-            // Apply zoom effect
-            zoomedImage.style.transform = `scale(${zoomFactor})`;
-            zoomedImage.style.transformOrigin = `${(mouseX / image.width) * 100}% ${(mouseY / image.height) * 100}%`;
-        });
-
-         // Reset zoom on mouseout (optional)
-         image.addEventListener('mouseout', () => {
-            const zoomedImage = imgContainer.querySelector('img');
-            zoomedImage.style.transform = 'scale(1)';
-            zoomedImage.style.transformOrigin = 'center';
-        });
-});
-
-function resetActiveImg(){
-    allHoverImages.forEach((img) => {
-        img.parentElement.classList.remove('active');
+    // Hide the dropdown when clicking outside of it
+    window.addEventListener('click', (e) => {
+        if (!e.target.matches('.cart-container a') && !e.target.matches('.cart-container i') && !e.target.matches('.cart-counter')) {
+            dropdownContent.style.display = 'none';
+        }
     });
-}
-    </script>
+</script>
+  
 
-<script>
-  function imageZoom(imgID, resultID) {
-var img, lens, result, cx, cy;
-img = document.getElementById(imgID);
-result = document.getElementById(resultID);
-/* Create lens: */
-lens = document.createElement("DIV");
-lens.setAttribute("class", "img-zoom-lens");
-/* Insert lens: */
-img.parentElement.insertBefore(lens, img);
-/* Calculate the ratio between result DIV and lens: */
-cx = result.offsetWidth / lens.offsetWidth;
-cy = result.offsetHeight / lens.offsetHeight;
-/* Set background properties for the result DIV */
-result.style.backgroundImage = "url('" + img.src + "')";
-result.style.backgroundSize = (img.width * cx) + "px " + (img.height * cy) + "px";
-/* Execute a function when someone moves the cursor over the image, or the lens: */
-lens.addEventListener("mousemove", moveLens);
-img.addEventListener("mousemove", moveLens);
-/* And also for touch screens: */
-lens.addEventListener("touchmove", moveLens);
-img.addEventListener("touchmove", moveLens);
-function moveLens(e) {
-var pos, x, y;
-/* Prevent any other actions that may occur when moving over the image */
-e.preventDefault();
-/* Get the cursor's x and y positions: */
-pos = getCursorPos(e);
-/* Calculate the position of the lens: */
-x = pos.x - (lens.offsetWidth / 2);
-y = pos.y - (lens.offsetHeight / 2);
-/* Prevent the lens from being positioned outside the image: */
-if (x > img.width - lens.offsetWidth) {x = img.width - lens.offsetWidth;}
-if (x < 0) {x = 0;}
-if (y > img.height - lens.offsetHeight) {y = img.height - lens.offsetHeight;}
-if (y < 0) {y = 0;}
-/* Set the position of the lens: */
-lens.style.left = x + "px";
-lens.style.top = y + "px";
-/* Display what the lens "sees": */
-result.style.backgroundPosition = "-" + (x * cx) + "px -" + (y * cy) + "px";
-}
-function getCursorPos(e) {
-var a, x = 0, y = 0;
-e = e || window.event;
-/* Get the x and y positions of the image: */
-a = img.getBoundingClientRect();
-/* Calculate the cursor's x and y coordinates, relative to the image: */
-x = e.pageX - a.left;
-y = e.pageY - a.top;
-/* Consider any page scrolling: */
-x = x - window.pageXOffset;
-y = y - window.pageYOffset;
-return {x : x, y : y};
-}
-}
- </script>
+
 
 
    </footer>
   
      
-    
-     
+  
+</body>
      
   </body>
   </html>

@@ -10,7 +10,7 @@
     <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/admin/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.2/css/bootstrap.min.css" integrity="sha512-b2QcS5SsA8tZodcDtGRELiGv5SaKSk1vDHDaQRda0htPYWZ6046lr3kJ5bAAQdpV2mmA/4v0wQF9MyU6/pDIAg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://cdn.datatables.net/v/bs5/dt-1.13.7/datatables.min.css" rel="stylesheet">
@@ -29,19 +29,19 @@
             </div>
             <ul class="sidebar-nav">
                 <li class="sidebar-item">
-                    <a href="admin_user_mgmnt" class="sidebar-link">
+                    <a href="/admin/admin_user_mgmnt" class="sidebar-link">
                         <i class="lni lni-user"></i>
                         <span>USER MANAGEMENT</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="admin_pdct_mgmnt" class="sidebar-link">
+                    <a href="/admin/admin_pdct_mgmnt" class="sidebar-link">
                         <i class="lni lni-agenda"></i>
                         <span>PRODUCT MANAGEMENT</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="admin_category" class="sidebar-link">
+                    <a href="/admin/admin_category" class="sidebar-link">
                         <i class="lni lni-agenda"></i>
                         <span>CATEGORY MANAGEMENT</span>
                     </a>
@@ -101,7 +101,7 @@
                 </li>
             </ul>
             <div class="sidebar-footer">
-                <a href="#" class="sidebar-link">
+                <a href="admin-logout" class="sidebar-link">
                     <i class="lni lni-exit"></i>
                     <span>Logout</span>
                 </a>
@@ -173,10 +173,13 @@
                       
                             <div class="form-group">
                               <label for="image">Image:</label>
+                             
                               <div class="custom-file">
+                                
                                 <input type="file" class="custom-file-input" id="image" name="image" accept="image/*"  multiple required>
                                 <label class="custom-file-label" for="image">Choose file</label>
                               </div>
+                            
                               <div id="image-preview" class="mt-2"></div>
                             </div>
                       

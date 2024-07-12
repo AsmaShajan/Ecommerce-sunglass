@@ -92,6 +92,7 @@ export const postAdminAddProduct = async(req,res)=>{
         }
          
          const images = req.files.map(file => file.filename);
+         console.log(images);
 
         const newProduct = new products({
             productid:req.body.productid,
@@ -391,15 +392,25 @@ export const unblockUser = async (req, res) => {
     }
 };
 
+export const getAdminForgotPassword = async(req,res)=>{
+    try {
+         res.render('customer/auth/forgot-password');
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export const getAdminLogout = (req,res)=>{
     //clearing authentication token
 
     try {
+        delete req.session.is_Admin;
         // Clear the JWT token cookie from the client's browser
         res.clearCookie('jwt');
        
         // Redirect the user to the login page
-        res.render('customer/auth/login');
+        res.render('customer/auth/login',{successmessage:''});
     } catch (error) {
         // If an error occurs, log the error and send a response
         console.error('Error during admin logout:', error);

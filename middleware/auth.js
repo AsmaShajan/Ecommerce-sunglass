@@ -3,11 +3,36 @@ import users from '../models/userModel.js';
 import multer from 'multer';
 import path from 'path';
 
+export const requireAuth = (req, res, next) => {
+  const token = req.cookies.jwt;
 
+  if (!token) {
+    return res.redirect('/login');
+  }
 
+  jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
+    if (err) {
+      res.clearCookie('jwt');
+      return res.redirect('/login');
+    } else {
+      req.user = decodedToken;
+      req.userId = decodedToken.userId;
+      console.log(req.userId);
+      req.isAdmin = (decodedToken.role === 'admin');
+      next();
+    }
+  });
+};
+
+export const preventCache = (req, res, next) => {
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+  res.set('Pragma', 'no-cache');
+  res.set('Expires', '0');
+  next();
+};
 
  
-export const requireAuth = (req,res,next)=>{
+export const requireAuth3 = (req,res,next)=>{
   const token = req.cookies.jwt;
  console.log(token);
  console.log(req.session.loggedIn);
@@ -43,6 +68,7 @@ export const requireAuth = (req,res,next)=>{
             // User is admin, grant access to admin side
             //res.redirect('/admin-dashboard');
             req.isAdmin = true; 
+
             next();
         } else {
             // User is not admin, grant access to user side
@@ -71,58 +97,43 @@ export const requireAuth = (req,res,next)=>{
      }
   }
 
-  const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, './public/customer/images'); // Set the destination folder where files will be stored
-    },
-    filename: (req, file, cb) => {
-        // Generate a unique filename for each uploaded file
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, file.fieldname + '-' + uniqueSuffix + '.' + file.originalname.split('.').pop());
-    }
-});
-
-// Multer upload configuration
-const upload = multer({ 
-    storage: storage,
-    limits: { fileSize: 5 * 1024 * 1024 }, // Limit file size to 5MB (optional)
-    fileFilter: (req, file, cb) => {
-        if (file.mimetype.startsWith('image/')) { // Accept only image files
-            cb(null, true);
-        } else {
-            cb(new Error('Only image files are allowed'));
-        }
-    }
-}).array('image', 5);
-
- export default upload;
- 
+  
 //to check if user is registered and  logged in
-export const checkUserLoggedIn = (req, res, next) => {
-  // Check if user is logged in based on session
+export const checkUserLoggedIn = async (req, res, next) => {
   console.log(req.session.loggedIn);
-  console.log(req.session.userLoggedIn);
-  if (req.session.loggedIn||req.session.userLoggedIn) {
-      // User is logged in, proceed to next middleware
-      next();
-     
-  } else {
-      // User is not logged in, redirect to login page
-      res.render('customer/auth/login');
+  try{
+       if (!req.session.loggedIn) {
+           return res.redirect('/login');
+       }
+       next();
   }
-};
+  catch(error){
+       console.log(error);
+  }
+}
 
-export const checkUserNotLoggedIn =(req,res,next) =>{
-  if(!req.session.loggedIn || !req.session.userLoggedIn){
-    //res.render('customer/auth/login')
-    next();
+export const checkUserLogout = async(req,res,next)=>{
+ try{
+  console.log( req.session.logout);
+  if(req.session.logout){
+    res.render('customer/auth/login', {successmessage: ''});
   }
-  else{
-    
-    const productList =  products.find({isBlocked:true});
-      res.render('home',{productList});
+ }
+catch(error){
+  console.log(error);
+}
+}
 
-  }
+export const checkUserNotLoggedIn = async(req,res,next)=>{
+  console.log(req.session.loggedIn);
+   try{
+       if(req.session.loggedIn){
+           return res.redirect('/');
+       }
+       return next()
+   }catch(error){
+       console.error(error)
+   }
 }
 
 // to check if user is blocked
@@ -145,12 +156,12 @@ export const checkBlockedUser = async (req, res, next) => {
     }
 };
 
-export const is_Admin = (req,res)=>{
+export const is_Admin = (req,res,next)=>{
   console.log(req.session.admin);
-  if(req.session.admin){
-    res.redirect('/admin/admin-dashboard');
+  if(!req.session.admin){
+    res.redirect('/customer/auth/login');
   }
   else{
-    res.redirect('/customer/auth/login');
+    res.redirect('/admin/admin-dashboard');
   }
 }

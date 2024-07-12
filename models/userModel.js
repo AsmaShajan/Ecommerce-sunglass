@@ -1,6 +1,7 @@
 
 import mongoose from 'mongoose';
 import validator from 'validator';
+import Address from '../models/address_model.js';
 
 //create a userschema
 const userSchema = new mongoose.Schema({
@@ -60,7 +61,12 @@ const userSchema = new mongoose.Schema({
   resetPasswordExpires: {
     type: Date,
     default:null
-  }
+  },
+  addresses:[{
+    type:mongoose.Schema.Types.ObjectId,
+        ref:'Address',
+        required:true,
+  }]
    
   },{timestamps:true});
 
